@@ -8,9 +8,10 @@ class dte(models.Model):
     dteTipo = models.CharField(max_length=50)
     dteFolio = models.IntegerField()
 
+    #emisorID = pk_company
     emisorRut = models.CharField(max_length=50)
     emisorRazonSocial = models.CharField(max_length=50)
-
+    #receptorID = pk_company
     receptorRut = models.CharField(max_length=50)
     receptorRazonSocial = models.CharField(max_length=50)
 
@@ -28,3 +29,19 @@ class dte(models.Model):
 
     def __str__(self):
         return self.dteEmision + " " + self.dteTipo + " " + self.dteFolio
+
+#quizas falta fk de pk_dte
+class detalle(models.Model):
+    monto = models.IntegerField()
+    iva = models.IntegerField()
+    txt = models.CharField(max_length=100)
+
+    def __str__(self):
+        return txt
+
+class company(models.Model):
+    rut = models.CharField(maxlength=50)
+    razonSocial = models.CharField(max_length=50)
+
+    def __str__(self):
+        return razonSocial 

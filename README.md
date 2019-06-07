@@ -14,7 +14,7 @@ To successfully run the project you have to:
   - sqlite 3.25.3+ 
   - django 2.2
 
-- after setting your invironment go to the terminal , activate it and navigate to folder "Invoices" (parent folder, where manage.py dwells)
+- after setting your environment go to the terminal , activate it and navigate to folder "Invoices" (parent folder, where manage.py dwells)
 
 - run one of the commands
 ```bash

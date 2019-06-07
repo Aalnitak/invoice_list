@@ -1,0 +1,86 @@
+{% extends "saveInvoices/base.html" %}
+<!-- two tables for each XML archive -->
+<!-- one for the information, other for the detail -->
+{% block content %}
+
+{% for invoice in invoices  %}
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Company</th>
+      <th scope="col">ID</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row"></th>
+      <td>Emisor: {{invoice.emisorRazonSocial}}  </td>
+      <td>{{invoice.emisorRut}}</td>
+      <td>{{invoice.dteTipo}}</td>
+    </tr>
+    <tr>
+      <th scope="row"></th>
+      <td>Receptor: {{invoice.receptorRazonSocial}} </td>
+      <td>{{invoice.receptorRut}}</td>
+      <td>{{invoice.dteEmision}}</td>
+    </tr>
+    <tr>
+      <th scope="row"></th>
+      <td></td>
+      <td></td>
+      <td>Folio {{invoice.dteFolio}}</td>
+    </tr>
+    <tr>
+      <th scope="row"></th>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Nombre del Servicio</th>
+      <th scope="col"> Monto </th>
+      <th scope="col">IVA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row"></th>
+      <td>{{invoice.detalle1Txt}}</td>
+      <td>{{invoice.detalle1Monto}}</td>
+      <td>{{invoice.detalle1Iva}}</td>      
+    </tr>
+    <!--  When detail is null dont show it  -->
+    {% if invoice.detalle2Monto is not None %}
+      <tr>
+      <th scope="row"></th>
+      <td>{{invoice.detalle2Txt}}</td>
+      <td>{{invoice.detalle2Monto}}</td>
+      <td>{{invoice.detalle2Iva}}</td>      
+    </tr>
+    {% endif %}
+      
+    {% if  invoice.detalle3Monto is not None%}
+    <tr>
+      <th scope="row"></th>
+      <td>{{invoice.detalle3Txt}}</td>
+      <td>{{invoice.detalle3Monto}}</td>
+      <td>{{invoice.detalle3Iva}}</td>      
+    </tr>
+    {% endif %}
+    
+  </tbody>
+</table>
+<br><hr><br>
+{% endfor %}
+
+
+
+{% endblock content %}

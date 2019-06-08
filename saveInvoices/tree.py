@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as et
 from zipfile import ZipFile
 import os
-from .models import dte
+from .models import Dte , Company , Detalle
 from datetime import datetime 
 
 def cargarDatos():
@@ -17,19 +17,15 @@ def cargarDatos():
             emi= None
             tipo= None
             folio= None
-            emirut= None
-            emiRS= None
-            recrut= None
-            recRS= None
-            d1monto= None
-            d1IVA= None
-            d1txt= None
-            d3monto = None
-            d3IVA = None
-            d3txt = None
-            d2monto = None
-            d2IVA = None
-            d2txt = None
+            rutAux= None
+            razonSocialAux= None
+            dMonto= None
+            dIVA= None
+            dTxt= None
+            emisor = None
+            receptor = None
+            comp = Company.objects.all()
+            
 
             #skip MACOSX filenames
             if 'MACOSX' not in name:
@@ -42,52 +38,48 @@ def cargarDatos():
                 tipo = root.attrib.get("tipo")
                 folio = root.attrib.get("folio")  
                 
-                for child in root:                   
-                    if (child.tag == 'emisor'):
-                        emirut = child.attrib.get("rut")
-                        emiRS = child.attrib.get("razonSocial")
-                    elif (child.tag == 'receptor'):
-                        recrut = child.attrib.get("rut")
-                        recRS = child.attrib.get("razonSocial")                  
-                    
-                    if (child.tag == 'items'):
-                        i=0
-                        for item in child:                                                
-                            if (i==0):
-                                d1monto = item.attrib.get("monto")
-                                d1IVA = item.attrib.get("iva")
-                                d1txt = item.text
-                            elif(i==1):
-                                d2monto = item.attrib.get("monto")
-                                d2IVA = item.attrib.get("iva")
-                                d2txt = item.text
-                            elif(i==2):
-                                d3monto = item.attrib.get("monto")
-                                d3IVA = item.attrib.get("iva")
-                                d3txt = item.text
-                            i=i+1
-                        
-                #create the tuple with each XML file
-                dteAux= dte(
+                for child in root:                                     
+                    # validate if the company already exists 
+                    if (child.tag != 'items'):                                                
+                        for compa in comp:
+                            if (compa.rut != child.attrib.get("rut") ):
+                                rutAux = child.attrib.get("rut")
+                                razonSocialAux = child.attrib.get("razonSocial")
+
+                                if (child.tag == 'emisor'):
+                                    emisor = Company(rut = rutAux, razonSocial = razonSocialAux)
+                                    emisor.save()
+                                elif (child.tag == 'receptor'):
+                                    receptor = Company(rut = rutAux, razonSocial = razonSocialAux)
+                                    receptor.save()
+                            else:
+                                if (child.tag == 'emisor'):
+                                    emisor = compa
+                                elif (child.tag == 'receptor'):
+                                    receptor = compa                           
+                #we create the DTE object with emisor and receptor ID
+                dteAux= Dte(
                     dteEmision = emi,
                     dteTipo = tipo,
                     dteFolio = folio,
-                    emisorRut = emirut,
-                    emisorRazonSocial = emiRS,
-                    receptorRut = recrut,
-                    receptorRazonSocial = recRS,
-                    detalle1Monto = d1monto,
-                    detalle1Iva = d1IVA,
-                    detalle1Txt = d1txt,
-                    detalle2Monto = d2monto,
-                    detalle2Iva = d2IVA,
-                    detalle2Txt = d2txt,
-                    detalle3Monto = d3monto,
-                    detalle3Iva = d3IVA,
-                    detalle3Txt = d3txt
+                    emisorID = emisor,  
+                    receptorID = receptor                  
                 )
+                dteAux.save()
+                # we create detalle object with this DTE ID
+                for child in root:
+                    if (child.tag == 'items'):                        
+                        for item in child:                                                
+                            dMonto = item.attrib.get("monto")
+                            dIVA = item.attrib.get("iva")
+                            dTxt = item.text
+                            detalleAux = Detalle(dte = dteAux, monto = dMonto, iva = dIVA, txt = dTxt)
+                            detalleAux.save()                   
+                        
+                
+                
                 #save it to the badaBase
-                dteAux.save()                
+                             
                 #remove unzziped XML file
                 os.remove(name)
             

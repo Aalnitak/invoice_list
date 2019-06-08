@@ -37,11 +37,14 @@ def cargarDatos():
                 emi = datetime.utcfromtimestamp(emiAUX).strftime('%Y-%m-%d %H:%M:%S')
                 tipo = root.attrib.get("tipo")
                 folio = root.attrib.get("folio")  
+
+                #first we need to populate Company model
                 
                 for child in root:                                     
                     # validate if the company already exists 
                     if (child.tag != 'items'):                                                
                         for compa in comp:
+                            #when the company doesnt exist
                             if (compa.rut != child.attrib.get("rut") ):
                                 rutAux = child.attrib.get("rut")
                                 razonSocialAux = child.attrib.get("razonSocial")
@@ -49,14 +52,19 @@ def cargarDatos():
                                 if (child.tag == 'emisor'):
                                     emisor = Company(rut = rutAux, razonSocial = razonSocialAux)
                                     emisor.save()
+                                    break
                                 elif (child.tag == 'receptor'):
                                     receptor = Company(rut = rutAux, razonSocial = razonSocialAux)
                                     receptor.save()
+                                    break
+                            #when it exists
                             else:
                                 if (child.tag == 'emisor'):
                                     emisor = compa
+                                    break
                                 elif (child.tag == 'receptor'):
-                                    receptor = compa                           
+                                    receptor = compa
+                                    break                           
                 #we create the DTE object with emisor and receptor ID
                 dteAux= Dte(
                     dteEmision = emi,
@@ -65,8 +73,9 @@ def cargarDatos():
                     emisorID = emisor,  
                     receptorID = receptor                  
                 )
+                #save dte to database
                 dteAux.save()
-                # we create detalle object with this DTE ID
+                # we create detalle objects with this DTE ID
                 for child in root:
                     if (child.tag == 'items'):                        
                         for item in child:                                                
@@ -75,10 +84,6 @@ def cargarDatos():
                             dTxt = item.text
                             detalleAux = Detalle(dte = dteAux, monto = dMonto, iva = dIVA, txt = dTxt)
                             detalleAux.save()                   
-                        
-                
-                
-                #save it to the badaBase
                              
                 #remove unzziped XML file
                 os.remove(name)

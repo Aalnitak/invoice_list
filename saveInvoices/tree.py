@@ -26,10 +26,7 @@ def cargarDatos():
             receptor = None
             comp = Company.objects.all()
             compi = None
-            flag = False
-           
-            
-           
+            exist = False
 
             #skip MACOSX filenames
             if 'MACOSX' not in name:
@@ -44,26 +41,22 @@ def cargarDatos():
 
                 #first we need to populate Company model
                 
-                for child in root:                                     
-                    # validate if the company already exists 
+                for child in root:                                      
                     if (child.tag != 'items'): 
                         #check if company exist
-                        for compa in comp:
-                            
-                            if (compa.razonSocial == child.attrib.get("razonSocial")):
+                        for compa in comp:                            
+                            if (compa.rut == child.attrib.get("rut")):
                                 exist = True
-                                compi = compa
+                                compi = compa                                
                                 break
-                            break
                         #when company exist
-                        if (flag):
+                        if (exist):
                             if (child.tag == 'emisor'):
                                 emisor = compi
-                                break
-                                
+                                                              
                             elif (child.tag == 'receptor'):
                                 receptor = compi 
-                                break
+                                
                         #when company doesnt exist
                         else:
                             rutAux = child.attrib.get("rut")
@@ -72,12 +65,12 @@ def cargarDatos():
                             if (child.tag == 'emisor'):
                                 emisor = Company(rut = rutAux, razonSocial = razonSocialAux)
                                 emisor.save()
-                                break
+                                
                                 
                             elif (child.tag == 'receptor'):
                                 receptor = Company(rut = rutAux, razonSocial = razonSocialAux)
                                 receptor.save()
-                                break
+                                
                                     
                                                               
                 #we create the DTE object with emisor and receptor ID

@@ -10,10 +10,76 @@
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     {% for company in compa %}
       <a class="dropdown-item" href="#">{{company.razonSocial}}</a>    
-    {% endfor %}
-    
-    
+    {% endfor %}    
   </div>
 </div>
+{% for dte in dtes %}
+
+
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Company</th>
+      <th scope="col">ID</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row"></th>
+      <td>Emisor: {{dte.emisorID.razonSocial}}  </td>
+      <td>{{dte.emisorID.rut}}</td>
+      <td>{{dte.dteTipo}}</td>
+    </tr>
+    <tr>
+      <th scope="row"></th>
+      <td>Receptor: {{dte.receptorID.razonSocial}} </td>
+      <td>{{dte.receptorID.rut}}</td>
+      <td>{{dte.dteEmision}}</td>
+    </tr>
+    <tr>
+      <th scope="row"></th>
+      <td></td>
+      <td></td>
+      <td>Folio {{dte.dteFolio}}</td>
+    </tr>
+    <tr>
+      <th scope="row"></th>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Nombre del Servicio</th>
+      <th scope="col"> Monto </th>
+      <th scope="col">IVA</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for detalle in deta  %}
+    
+    {% if dte == detalle.dte %}
+      <tr>
+        <th scope="row"></th>
+        <td>{{detalle.txt}}</td>
+        <td>{{detalle.monto}}</td>
+        <td>{{detalle.iva}}</td>      
+      </tr>
+    {% else %}
+    <p>hola</p>
+    {% endif %}
+    </tbody>
+  </table>
+  <br><hr><br>
+  {% endfor %}
+{% endfor %}
 
 {% endblock content %}

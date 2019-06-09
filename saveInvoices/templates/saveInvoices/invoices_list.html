@@ -3,7 +3,10 @@
 <!-- one for the information, other for the detail -->
 {% block content %}
 
-{% for invoice in invoices  %}
+<h3> invoices emitted by Company A - ID: 111.111-6</h3>
+{% for dte in dtes %}
+<!-- filter only company with ID 111.111-6 -->
+{% if dte.emisorID.rut == '111.111-6' %}
 <table class="table table-sm">
   <thead>
     <tr>
@@ -17,21 +20,21 @@
   <tbody>
     <tr>
       <th scope="row"></th>
-      <td>Emisor: {{invoice.emisorRazonSocial}}  </td>
-      <td>{{invoice.emisorRut}}</td>
-      <td>{{invoice.dteTipo}}</td>
+      <td>Emitted by: {{dte.emisorID.razonSocial}}  </td>
+      <td>{{dte.emisorID.rut}}</td>
+      <td>{{dte.dteTipo}}</td>
     </tr>
     <tr>
       <th scope="row"></th>
-      <td>Receptor: {{invoice.receptorRazonSocial}} </td>
-      <td>{{invoice.receptorRut}}</td>
-      <td>{{invoice.dteEmision}}</td>
+      <td>Recieved by: {{dte.receptorID.razonSocial}} </td>
+      <td>{{dte.receptorID.rut}}</td>
+      <td>Date Created:  {{dte.dteEmision}}</td>
     </tr>
     <tr>
       <th scope="row"></th>
       <td></td>
       <td></td>
-      <td>Folio {{invoice.dteFolio}}</td>
+      <td>Folio {{dte.dteFolio}}</td>
     </tr>
     <tr>
       <th scope="row"></th>
@@ -41,46 +44,30 @@
     </tr>
   </tbody>
 </table>
+
 <table class="table table-sm">
   <thead>
     <tr>
       <th scope="col"></th>
-      <th scope="col">Nombre del Servicio</th>
-      <th scope="col"> Monto </th>
+      <th scope="col">Service / Product </th>
+      <th scope="col"> Value </th>
       <th scope="col">IVA</th>
     </tr>
   </thead>
-  <tbody>
-    <tr>
-      <th scope="row"></th>
-      <td>{{invoice.detalle1Txt}}</td>
-      <td>{{invoice.detalle1Monto}}</td>
-      <td>{{invoice.detalle1Iva}}</td>      
-    </tr>
-    <!--  When detail is null dont show it  -->
-    {% if invoice.detalle2Monto is not None %}
-      <tr>
-      <th scope="row"></th>
-      <td>{{invoice.detalle2Txt}}</td>
-      <td>{{invoice.detalle2Monto}}</td>
-      <td>{{invoice.detalle2Iva}}</td>      
-    </tr>
-    {% endif %}
-      
-    {% if  invoice.detalle3Monto is not None%}
-    <tr>
-      <th scope="row"></th>
-      <td>{{invoice.detalle3Txt}}</td>
-      <td>{{invoice.detalle3Monto}}</td>
-      <td>{{invoice.detalle3Iva}}</td>      
-    </tr>
-    {% endif %}
-    
-  </tbody>
-</table>
-<br><hr><br>
+    <tbody>
+      {% for detalle in deta  %}
+      {% if dte == detalle.dte %}
+        <tr>
+          <th scope="row"></th>
+          <td>{{detalle.txt}}</td>
+          <td>{{detalle.monto}}</td>
+          <td>{{detalle.iva}}</td>      
+        </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+  <br><hr><br>
+{% endif %}
 {% endfor %}
-
-
-
 {% endblock content %}

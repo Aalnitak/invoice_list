@@ -44,4 +44,9 @@ The user story states: "As a company executive, I want to see a list of all the 
 
 # process
 
-To handle the access to the XML files I coded "tree.py" an algorithm to extract the information of the XML files. To do this i had to unzip, read, write into database, delete the unziped XML file. After this I used the django Framework and bootstrap to show this information on the browser
+To handle the access to the XML files I coded "tree.py" an algorithm to extract the information of the XML files. To do this i had to unzip, read, write into database, delete the unziped XML file. After this I used the django Framework , python and bootstrap to show this information on the browser
+
+# next thing to do
+
+We could show a list of all the companies available and select the one that we want to filter. 
+In the meantime we only show invoices emitted by "Company A"

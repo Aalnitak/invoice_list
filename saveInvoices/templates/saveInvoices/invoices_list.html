@@ -3,19 +3,10 @@
 <!-- one for the information, other for the detail -->
 {% block content %}
 
-<div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    FilterBy
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    {% for company in compa %}
-      <a class="dropdown-item" href="#">{{company.razonSocial}}</a>    
-    {% endfor %}    
-  </div>
-</div>
+<h3> invoices emitted by Company A - ID: 111.111-6</h3>
 {% for dte in dtes %}
-
-
+<!-- filter only company with ID 111.111-6 -->
+{% if dte.emisorID.rut == '111.111-6' %}
 <table class="table table-sm">
   <thead>
     <tr>
@@ -29,15 +20,15 @@
   <tbody>
     <tr>
       <th scope="row"></th>
-      <td>Emisor: {{dte.emisorID.razonSocial}}  </td>
+      <td>Emitted by: {{dte.emisorID.razonSocial}}  </td>
       <td>{{dte.emisorID.rut}}</td>
       <td>{{dte.dteTipo}}</td>
     </tr>
     <tr>
       <th scope="row"></th>
-      <td>Receptor: {{dte.receptorID.razonSocial}} </td>
+      <td>Recieved by: {{dte.receptorID.razonSocial}} </td>
       <td>{{dte.receptorID.rut}}</td>
-      <td>{{dte.dteEmision}}</td>
+      <td>Date Created:  {{dte.dteEmision}}</td>
     </tr>
     <tr>
       <th scope="row"></th>
@@ -58,28 +49,25 @@
   <thead>
     <tr>
       <th scope="col"></th>
-      <th scope="col">Nombre del Servicio</th>
-      <th scope="col"> Monto </th>
+      <th scope="col">Service / Product </th>
+      <th scope="col"> Value </th>
       <th scope="col">IVA</th>
     </tr>
   </thead>
-  <tbody>
-    {% for detalle in deta  %}
-    
-    {% if dte == detalle.dte %}
-      <tr>
-        <th scope="row"></th>
-        <td>{{detalle.txt}}</td>
-        <td>{{detalle.monto}}</td>
-        <td>{{detalle.iva}}</td>      
-      </tr>
-    {% else %}
-    <p>hola</p>
-    {% endif %}
+    <tbody>
+      {% for detalle in deta  %}
+      {% if dte == detalle.dte %}
+        <tr>
+          <th scope="row"></th>
+          <td>{{detalle.txt}}</td>
+          <td>{{detalle.monto}}</td>
+          <td>{{detalle.iva}}</td>      
+        </tr>
+      {% endif %}
+      {% endfor %}
     </tbody>
   </table>
   <br><hr><br>
-  {% endfor %}
+{% endif %}
 {% endfor %}
-
 {% endblock content %}
